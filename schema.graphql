@@ -13,40 +13,13 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Mutation {
-  createDraft(data: PostCreateInput!): Post
-  deletePost(id: String!): Post
-  incrementPostViewCount(id: String!): Post
   login(email: String!, password: String!): AuthPayload
-  signup(email: String!, isAdmin: Boolean, name: String, password: String!): AuthPayload
-  togglePublishPost(id: String!): Post
-}
-
-type Post {
-  author: User
-  content: String
-  createdAt: DateTime!
-  id: String!
-  published: Boolean!
-  title: String!
-  updatedAt: DateTime!
-  viewCount: Int!
-}
-
-input PostCreateInput {
-  content: String
-  title: String!
-}
-
-input PostOrderByUpdatedAtInput {
-  updatedAt: SortOrder!
+  signup(email: String!, isAdmin: Boolean!, name: String!, password: String!): AuthPayload
 }
 
 type Query {
   allUsers: [User!]!
-  draftsByUser(userUniqueInput: UserUniqueInput!): [Post]
-  feed(orderBy: PostOrderByUpdatedAtInput, searchString: String, skip: Int, take: Int): [Post!]!
   me: User
-  postById(id: String): Post
 }
 
 enum SortOrder {
@@ -58,14 +31,12 @@ type User {
   email: String
   id: String
   name: String
-  posts: [Post!]!
 }
 
 input UserCreateInput {
   email: String!
   isAdmin: Boolean
   name: String
-  posts: [PostCreateInput!]
 }
 
 input UserUniqueInput {
