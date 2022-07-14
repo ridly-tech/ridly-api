@@ -12,5 +12,11 @@ model User {
   email    String  @unique
   password String
   name     String?
-  isAdmin  Boolean
+  role     Role    @default(admin)
+}
+
+enum Role {
+  admin
+  office
+  driver
 }

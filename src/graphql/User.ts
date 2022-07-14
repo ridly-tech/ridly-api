@@ -6,15 +6,18 @@ import {
   objectType,
   stringArg,
   inputObjectType,
-  asNexusMethod,
-  enumType,
   booleanArg,
+  enumType,
 } from 'nexus'
-import { DateTimeResolver } from 'graphql-scalars'
 import { Context } from '../context'
 import { UserInputError } from 'apollo-server'
 
-export const DateTime = asNexusMethod(DateTimeResolver, 'date')
+// role enum type
+
+export const Role = enumType({
+  name: 'Role',
+  members: ['admin', 'office', 'driver']
+})
 
 // User Type
 
@@ -24,6 +27,7 @@ export const User = objectType({
     t.string('id')
     t.string('name')
     t.string('email')
+    t.field('role', { type: Role })
   },
 })
 
@@ -43,8 +47,8 @@ export const UserCreateInput = inputObjectType({
   name: 'UserCreateInput',
   definition(t) {
     t.nonNull.string('email')
-    t.string('name')
-    t.nullable.boolean('isAdmin')
+    t.nonNull.string('name')
+    t.nonNull.field('role', { type: Role })
   },
 })
 
@@ -96,11 +100,15 @@ export const Mutation = objectType({
         name: nonNull(stringArg()),
         email: nonNull(stringArg()),
         password: nonNull(stringArg()),
-        isAdmin: nonNull(booleanArg())
+        role: nonNull(stringArg())
       },
       resolve: async (_parent, args, context: Context) => {
-        if (args.name === 'Daniel') {
-          throw new UserInputError('Nobody called Daniel allowed.')
+        // TODO: testing errors
+        // if (args.name === 'Daniel') {
+        //   throw new UserInputError('Nobody called Daniel allowed.')
+        // }
+        if (args.role !== 'admin' && args.role !== 'office' && args.role !== 'driver') {
+          throw new UserInputError(`User role must be 'admin', 'office' or 'driver'.`)
         }
         const hashedPassword = await hash(args.password, 10)
         const user = await context.prisma.user.create({
@@ -108,7 +116,7 @@ export const Mutation = objectType({
             name: args.name,
             email: args.email,
             password: hashedPassword,
-            isAdmin: args.isAdmin ?? false
+            role: args.role
           },
         })
         return {
