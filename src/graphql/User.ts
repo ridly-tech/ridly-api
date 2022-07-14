@@ -16,6 +16,50 @@ import { UserInputError } from 'apollo-server'
 
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
 
+// User Type
+
+export const User = objectType({
+  name: 'User',
+  definition(t) {
+    t.string('id')
+    t.string('name')
+    t.string('email')
+  },
+})
+
+// Unique User Input Type
+
+export const UserUniqueInput = inputObjectType({
+  name: 'UserUniqueInput',
+  definition(t) {
+    t.string('id')
+    t.string('email')
+  },
+})
+
+// Create User Input Type
+
+export const UserCreateInput = inputObjectType({
+  name: 'UserCreateInput',
+  definition(t) {
+    t.nonNull.string('email')
+    t.string('name')
+    t.nullable.boolean('isAdmin')
+  },
+})
+
+// AuthPayload (login and logout with JWT) object
+
+export const AuthPayload = objectType({
+  name: 'AuthPayload',
+  definition(t) {
+    t.string('token')
+    t.field('user', { type: 'User' })
+  },
+})
+
+// User Queries
+
 export const Query = objectType({
   name: 'Query',
   definition(t) {
@@ -40,6 +84,8 @@ export const Query = objectType({
     })
   },
 })
+
+// User Mutations
 
 export const Mutation = objectType({
   name: 'Mutation',
@@ -71,7 +117,6 @@ export const Mutation = objectType({
         }
       },
     })
-
     t.field('login', {
       type: 'AuthPayload',
       args: {
@@ -97,44 +142,5 @@ export const Mutation = objectType({
         }
       },
     })
-  },
-})
-
-export const User = objectType({
-  name: 'User',
-  definition(t) {
-    t.string('id')
-    t.string('name')
-    t.string('email')
-  },
-})
-
-export const SortOrder = enumType({
-  name: 'SortOrder',
-  members: ['asc', 'desc'],
-})
-
-export const UserUniqueInput = inputObjectType({
-  name: 'UserUniqueInput',
-  definition(t) {
-    t.string('id')
-    t.string('email')
-  },
-})
-
-export const UserCreateInput = inputObjectType({
-  name: 'UserCreateInput',
-  definition(t) {
-    t.nonNull.string('email')
-    t.string('name')
-    t.nullable.boolean('isAdmin')
-  },
-})
-
-export const AuthPayload = objectType({
-  name: 'AuthPayload',
-  definition(t) {
-    t.string('token')
-    t.field('user', { type: 'User' })
   },
 })

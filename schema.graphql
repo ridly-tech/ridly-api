@@ -22,11 +22,6 @@ type Query {
   me: User
 }
 
-enum SortOrder {
-  asc
-  desc
-}
-
 type User {
   email: String
   id: String
