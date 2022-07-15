@@ -1,4 +1,4 @@
-import { rule, shield } from 'graphql-shield'
+import { rule, shield, or } from 'graphql-shield'
 import { getUserId, getUserDetails } from '../utils'
 import { Context } from '../context'
 
@@ -7,16 +7,22 @@ const rules = {
     const userId = getUserId(context)
     return Boolean(userId)
   }),
-  isCurrentUserEmailOrAdmin: rule()( async (_parent, {email}, context: Context) => {
+  isCurrentUserEmail: rule()( async (_parent, {email}, context: Context) => {
     const user = await getUserDetails(context)
-    // console.log(`The user requesting to make changes or to view documents is: 🤡 ${email}`)
-    // console.log(`The user who is logged in is ${user?.email}`)
-    if (user?.email === email || user?.role === 'admin') {
+    if (user?.email === email) {
       return true
     } else {
-      return false
+      return new Error('You do not have authorization to execute this query or mutation.')
     }
-  })
+  }),
+  isAdmin: rule()( async (_parent, _args, context: Context) => {
+    const user = await getUserDetails(context)
+    if (user?.role === 'admin') {
+      return true
+    } else {
+      return new Error('You are an admin. An error has been found.')
+    }
+  }),
 }
 
 export const permissions = shield({
@@ -24,6 +30,6 @@ export const permissions = shield({
     me: rules.isAuthenticatedUser,
   },
   Mutation: {
-    updateUser: rules.isCurrentUserEmailOrAdmin
+    updateUser: or(rules.isCurrentUserEmail, rules.isAdmin)
   },
-}, {allowExternalErrors: true})
+}, {allowExternalErrors: true} )
