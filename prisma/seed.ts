@@ -5,10 +5,13 @@ const prisma = new PrismaClient()
 
 const userData: Prisma.UserCreateInput[] = [
   {
-    name: 'Daniel',
-    email: 'daniel@ridly.com.au',
+    firstName: 'Daniel',
+    lastName: 'Lord-Doyle',
+    email: 'tech@ridly.com.au',
     password: '$2a$10$8yuES8eIrlZDmds3CNSznuNIPeb3h5A5BQfxOgeoy0OtjjzAVrbcW', // password
-    role: 'admin'
+    role: 'admin',
+    phone: '0451087593',
+    image: 'image coming later'
   },
 ]
 

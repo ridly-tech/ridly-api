@@ -9,7 +9,8 @@ type AuthPayload {
 
 type Mutation {
   login(email: String!, password: String!): AuthPayload
-  signup(email: String!, name: String!, password: String!, role: String!): AuthPayload
+  signup(email: String!, firstName: String!, image: String!, lastName: String!, password: String!, phone: String!, role: String!): AuthPayload
+  updateUser(email: String!, firstName: String!, image: String!, lastName: String!, password: String!, phone: String!): User
 }
 
 type Query {
@@ -25,18 +26,25 @@ enum Role {
 
 type User {
   email: String
+  firstName: String
   id: String
-  name: String
+  image: String
+  lastName: String
+  password: String
+  phone: String
   role: Role
 }
 
 input UserCreateInput {
   email: String!
-  name: String!
+  firstName: String!
+  image: String!
+  lastName: String!
+  phone: String!
   role: Role!
 }
 
 input UserUniqueInput {
-  email: String
-  id: String
+  email: String!
+  id: String!
 }
