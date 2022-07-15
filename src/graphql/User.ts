@@ -11,7 +11,7 @@ import {
 import { Context } from '../context'
 import { UserInputError } from 'apollo-server'
 
-// role enum type
+// Role enum type
 
 export const Role = enumType({
   name: 'Role',
