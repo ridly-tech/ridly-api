@@ -10,6 +10,6 @@ const server = new ApolloServer({
 server.listen().then(({ url }) =>
   console.log(
     `\
-🚀 Ridly Server ready at: ${url}`,
+🚀 Ridly Server ready at: ${url}. Your app secret is ${process.env.APP_SECRET}`,
   ),
 )

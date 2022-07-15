@@ -6,7 +6,6 @@ import {
   objectType,
   stringArg,
   inputObjectType,
-  booleanArg,
   enumType,
 } from 'nexus'
 import { Context } from '../context'

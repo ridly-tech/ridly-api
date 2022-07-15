@@ -1,13 +1,14 @@
 import { PrismaClient, Prisma } from '@prisma/client'
+import { hash } from 'bcryptjs'
 
 const prisma = new PrismaClient()
-
 
 const userData: Prisma.UserCreateInput[] = [
   {
     name: 'Daniel',
     email: 'daniel@ridly.com.au',
-    password: '$2a$10$Gj0LXd5cWQzWz6Xl4K7oY.WhrVTRyyWy227rspmCS200O2tMLyyna', // password
+    password: '$2a$10$8yuES8eIrlZDmds3CNSznuNIPeb3h5A5BQfxOgeoy0OtjjzAVrbcW', // password
+    role: 'admin'
   },
 ]
 
