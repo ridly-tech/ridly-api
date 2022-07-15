@@ -1,4 +1,4 @@
-import { APP_SECRET, getUserId, getUserDetails } from '../utils'
+import { APP_SECRET, getUserId } from '../utils'
 import { compare, hash } from 'bcryptjs'
 import { sign } from 'jsonwebtoken'
 import {

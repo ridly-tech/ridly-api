@@ -7,7 +7,7 @@ const rules = {
     const userId = getUserId(context)
     return Boolean(userId)
   }),
-  isCurrentAuthenticatedUserOrAdmin: rule()( async (_parent, {email}, context: Context) => {
+  isCurrentUserEmailOrAdmin: rule()( async (_parent, {email}, context: Context) => {
     const user = await getUserDetails(context)
     // console.log(`The user requesting to make changes or to view documents is: 🤡 ${email}`)
     // console.log(`The user who is logged in is ${user?.email}`)
@@ -24,6 +24,6 @@ export const permissions = shield({
     me: rules.isAuthenticatedUser,
   },
   Mutation: {
-    updateUser: rules.isCurrentAuthenticatedUserOrAdmin
+    updateUser: rules.isCurrentUserEmailOrAdmin
   },
 }, {allowExternalErrors: true})
