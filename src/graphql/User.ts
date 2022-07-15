@@ -103,10 +103,6 @@ export const Mutation = objectType({
         role: nonNull(stringArg())
       },
       resolve: async (_parent, args, context: Context) => {
-        // TODO: testing errors
-        // if (args.name === 'Daniel') {
-        //   throw new UserInputError('Nobody called Daniel allowed.')
-        // }
         if (args.role !== 'admin' && args.role !== 'office' && args.role !== 'driver') {
           throw new UserInputError(`User role must be 'admin', 'office' or 'driver'.`)
         }

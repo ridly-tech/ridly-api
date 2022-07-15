@@ -2,21 +2,12 @@ import { PrismaClient, Prisma } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
+
 const userData: Prisma.UserCreateInput[] = [
   {
     name: 'Daniel',
     email: 'daniel@ridly.com.au',
-    password: '$2a$10$TLtC603wy85MM./ot/pvEec0w2au6sjPaOmLpLQFbxPdpJH9fDwwS', // myPassword42
-    isAdmin: true,
-    posts: {
-      create: [
-        {
-          title: 'Ridly is the best!',
-          content: "It's the only rubbish management company we need!",
-          published: true,
-        },
-      ],
-    },
+    password: '$2a$10$Gj0LXd5cWQzWz6Xl4K7oY.WhrVTRyyWy227rspmCS200O2tMLyyna', // password
   },
 ]
 
