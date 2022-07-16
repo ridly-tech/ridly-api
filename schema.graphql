@@ -8,6 +8,7 @@ type AuthPayload {
 }
 
 type Mutation {
+  deleteUser(email: String!): UserAdminMessage
   login(email: String!, password: String!): AuthPayload
   signup(email: String!, firstName: String!, image: String!, lastName: String!, password: String!, phone: String!, role: String!): AuthPayload
   updateUser(email: String!, firstName: String!, image: String!, lastName: String!, password: String!, phone: String!): User
@@ -33,6 +34,11 @@ type User {
   password: String
   phone: String
   role: Role
+}
+
+type UserAdminMessage {
+  message: String
+  success: Boolean
 }
 
 input UserCreateInput {

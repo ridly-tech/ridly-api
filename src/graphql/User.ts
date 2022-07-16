@@ -11,14 +11,12 @@ import {
 import { Context } from '../context'
 import { UserInputError } from 'apollo-server'
 
-// Role for User enum type
+// Object and Response Types
 
 export const Role = enumType({
   name: 'Role',
   members: ['admin', 'office', 'driver']
 })
-
-// User Type
 
 export const User = objectType({
   name: 'User',
@@ -34,8 +32,6 @@ export const User = objectType({
   },
 })
 
-// Unique User Input Type
-
 export const UserUniqueInput = inputObjectType({
   name: 'UserUniqueInput',
   definition(t) {
@@ -43,8 +39,6 @@ export const UserUniqueInput = inputObjectType({
     t.nonNull.string('email')
   },
 })
-
-// Create User Input Type
 
 export const UserCreateInput = inputObjectType({
   name: 'UserCreateInput',
@@ -58,7 +52,13 @@ export const UserCreateInput = inputObjectType({
   },
 })
 
-// AuthPayload (login and logout with JWT) object
+export const UserAdminMessage = objectType({
+  name: 'UserAdminMessage',
+  definition(t) {
+    t.boolean('success')
+    t.string('message')
+  },
+})
 
 export const AuthPayload = objectType({
   name: 'AuthPayload',
@@ -170,7 +170,7 @@ export const Mutation = objectType({
         phone: nonNull(stringArg()),
         image: nonNull(stringArg())
       },
-      resolve: async (_parent, {firstName, lastName, email, password, phone, image}, context: Context) => {
+      resolve: async (_parent, { firstName, lastName, email, password, phone, image }, context: Context) => {
         const user = await context.prisma.user.findUnique({
           where: {
             email,
@@ -189,12 +189,30 @@ export const Mutation = objectType({
           phone,
           image
         }
-        return context.prisma.user.update({
-          where: { id: user.id },
-          data: {
-            ...updatedUser
+        return context.prisma.user.update({ where: { id: user.id }, data: { ...updatedUser } })
+      }
+    })
+    t.field('deleteUser', {
+      type: 'UserAdminMessage',
+      args: {
+        email: nonNull(stringArg())
+      },
+      resolve: async( _parent, {email}, context: Context) => {
+        const user = await context.prisma.user.findUnique({
+          where: {
+            email,
           }
         })
+        if (!user) {
+          return new Error(`No user with the email '${email}' exists.`)
+        }
+        await context.prisma.user.delete({
+          where: { id: user.id }
+        })
+        return {
+          success: true,
+          message: 'The user has been deleted.'
+        }
       }
     })
   },
