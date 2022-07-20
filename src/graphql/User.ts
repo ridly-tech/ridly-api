@@ -7,6 +7,7 @@ import {
   stringArg,
   inputObjectType,
   enumType,
+  arg,
 } from 'nexus'
 import { Context } from '../context'
 import { UserInputError } from 'apollo-server'
@@ -90,6 +91,19 @@ export const Query = objectType({
         })
       },
     })
+    t.nonNull.list.nonNull.field('getUserType', {
+      type: 'User',
+      args: {
+        role: nonNull(arg({ type: "Role" }))
+      },
+      resolve: async (_parent, { role }, context: Context) => {
+        return context.prisma.user.findMany({
+          where: {
+            role
+          }
+        })
+      }
+    })
   },
 })
 
@@ -110,7 +124,7 @@ export const Mutation = objectType({
         image: nonNull(stringArg())
       },
       resolve: async (_parent, args, context: Context) => {
-        const currentUserWithThatEmail = await context.prisma.user.findUnique({ where: { email: args.email }})
+        const currentUserWithThatEmail = await context.prisma.user.findUnique({ where: { email: args.email } })
         if (currentUserWithThatEmail) {
           throw new UserInputError('A user with this email already exists.')
         }
@@ -197,7 +211,7 @@ export const Mutation = objectType({
       args: {
         email: nonNull(stringArg())
       },
-      resolve: async( _parent, {email}, context: Context) => {
+      resolve: async (_parent, { email }, context: Context) => {
         const user = await context.prisma.user.findUnique({
           where: {
             email,
