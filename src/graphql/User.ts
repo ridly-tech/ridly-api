@@ -6,49 +6,60 @@ import {
   objectType,
   stringArg,
   inputObjectType,
-  asNexusMethod,
   enumType,
-  booleanArg,
+  arg,
 } from 'nexus'
-import { DateTimeResolver } from 'graphql-scalars'
 import { Context } from '../context'
 import { UserInputError } from 'apollo-server'
 
-export const DateTime = asNexusMethod(DateTimeResolver, 'date')
+// Object and Response Types
 
-// User Type
+export const Role = enumType({
+  name: 'Role',
+  members: ['admin', 'office', 'driver']
+})
 
 export const User = objectType({
   name: 'User',
   definition(t) {
     t.string('id')
-    t.string('name')
+    t.string('firstName')
+    t.string('lastName')
     t.string('email')
+    t.string('phone')
+    t.string('image')
+    t.string('password')
+    t.field('role', { type: Role })
   },
 })
-
-// Unique User Input Type
 
 export const UserUniqueInput = inputObjectType({
   name: 'UserUniqueInput',
   definition(t) {
-    t.string('id')
-    t.string('email')
+    t.nonNull.string('id')
+    t.nonNull.string('email')
   },
 })
-
-// Create User Input Type
 
 export const UserCreateInput = inputObjectType({
   name: 'UserCreateInput',
   definition(t) {
     t.nonNull.string('email')
-    t.string('name')
-    t.nullable.boolean('isAdmin')
+    t.nonNull.string('firstName')
+    t.nonNull.string('lastName')
+    t.nonNull.string('phone')
+    t.nonNull.string('image')
+    t.nonNull.field('role', { type: Role })
   },
 })
 
-// AuthPayload (login and logout with JWT) object
+export const UserAdminMessage = objectType({
+  name: 'UserAdminMessage',
+  definition(t) {
+    t.boolean('success')
+    t.string('message')
+  },
+})
 
 export const AuthPayload = objectType({
   name: 'AuthPayload',
@@ -69,18 +80,29 @@ export const Query = objectType({
         return context.prisma.user.findMany()
       },
     })
-
     t.nullable.field('me', {
       type: 'User',
       resolve: (parent, args, context: Context) => {
         const userId = getUserId(context)
-        console.log(userId)
         return context.prisma.user.findUnique({
           where: {
             id: String(userId),
           },
         })
       },
+    })
+    t.nonNull.list.nonNull.field('getUserType', {
+      type: 'User',
+      args: {
+        role: nonNull(arg({ type: "Role" }))
+      },
+      resolve: async (_parent, { role }, context: Context) => {
+        return context.prisma.user.findMany({
+          where: {
+            role
+          }
+        })
+      }
     })
   },
 })
@@ -93,22 +115,32 @@ export const Mutation = objectType({
     t.field('signup', {
       type: 'AuthPayload',
       args: {
-        name: nonNull(stringArg()),
+        firstName: nonNull(stringArg()),
+        lastName: nonNull(stringArg()),
         email: nonNull(stringArg()),
         password: nonNull(stringArg()),
-        isAdmin: nonNull(booleanArg())
+        role: nonNull(stringArg()),
+        phone: nonNull(stringArg()),
+        image: nonNull(stringArg())
       },
       resolve: async (_parent, args, context: Context) => {
-        if (args.name === 'Daniel') {
-          throw new UserInputError('Nobody called Daniel allowed.')
+        const currentUserWithThatEmail = await context.prisma.user.findUnique({ where: { email: args.email } })
+        if (currentUserWithThatEmail) {
+          throw new UserInputError('A user with this email already exists.')
+        }
+        if (args.role !== 'admin' && args.role !== 'office' && args.role !== 'driver') {
+          throw new UserInputError(`User role must be 'admin', 'office' or 'driver'.`)
         }
         const hashedPassword = await hash(args.password, 10)
         const user = await context.prisma.user.create({
           data: {
-            name: args.name,
+            firstName: args.firstName,
+            lastName: args.lastName,
             email: args.email,
             password: hashedPassword,
-            isAdmin: args.isAdmin ?? false
+            role: args.role,
+            phone: args.phone,
+            image: args.image
           },
         })
         return {
@@ -141,6 +173,61 @@ export const Mutation = objectType({
           user,
         }
       },
+    })
+    t.field('updateUser', {
+      type: 'User',
+      args: {
+        firstName: nonNull(stringArg()),
+        lastName: nonNull(stringArg()),
+        email: nonNull(stringArg()),
+        password: nonNull(stringArg()),
+        phone: nonNull(stringArg()),
+        image: nonNull(stringArg())
+      },
+      resolve: async (_parent, { firstName, lastName, email, password, phone, image }, context: Context) => {
+        const user = await context.prisma.user.findUnique({
+          where: {
+            email,
+          }
+        })
+        if (!user) {
+          throw new Error(`No user found for email: ${email}`)
+        }
+        const passwordValid = await compare(password, user.password)
+        if (!passwordValid) {
+          throw new Error('Invalid password')
+        }
+        const updatedUser = {
+          firstName,
+          lastName,
+          phone,
+          image
+        }
+        return context.prisma.user.update({ where: { id: user.id }, data: { ...updatedUser } })
+      }
+    })
+    t.field('deleteUser', {
+      type: 'UserAdminMessage',
+      args: {
+        email: nonNull(stringArg())
+      },
+      resolve: async (_parent, { email }, context: Context) => {
+        const user = await context.prisma.user.findUnique({
+          where: {
+            email,
+          }
+        })
+        if (!user) {
+          return new Error(`No user with the email '${email}' exists.`)
+        }
+        await context.prisma.user.delete({
+          where: { id: user.id }
+        })
+        return {
+          success: true,
+          message: 'The user has been deleted.'
+        }
+      }
     })
   },
 })

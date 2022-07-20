@@ -8,9 +8,18 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  email    String  @unique
-  password String
-  name     String?
-  isAdmin  Boolean
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  email     String @unique
+  password  String
+  firstName String
+  lastName  String
+  phone     String
+  image     String
+  role      Role   @default(driver)
+}
+
+enum Role {
+  admin
+  office
+  driver
 }
