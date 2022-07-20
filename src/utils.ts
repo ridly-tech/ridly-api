@@ -1,6 +1,5 @@
 import { verify } from 'jsonwebtoken'
 import { Context } from './context'
-import { User } from './graphql'
 
 const nodeSecret: string = (process.env.APP_SECRET as string)
 

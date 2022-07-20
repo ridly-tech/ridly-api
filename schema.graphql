@@ -7,6 +7,34 @@ type AuthPayload {
   user: User
 }
 
+"""
+A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
+"""
+scalar DateTime
+
+type Job {
+  city: String
+  createdAt: DateTime
+  creatorId: String
+  date: DateTime
+  id: String
+  ownerId: String
+  postcode: String
+  street: String
+  suburb: String
+  typeOfRubbish: [String]
+  updatedAt: DateTime
+}
+
+input JobCreateInput {
+  city: String!
+  date: DateTime!
+  postcode: String!
+  street: String!
+  suburb: String!
+  typeOfRubbish: [String!]!
+}
+
 type Mutation {
   deleteUser(email: String!): UserAdminMessage
   login(email: String!, password: String!): AuthPayload
@@ -18,6 +46,7 @@ type Query {
   allUsers: [User!]!
   getUserType(role: Role!): [User!]!
   me: User
+  usersJobs: [Job!]!
 }
 
 enum Role {

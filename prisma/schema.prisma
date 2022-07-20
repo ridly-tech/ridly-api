@@ -8,14 +8,32 @@ datasource db {
 }
 
 model User {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  email     String @unique
-  password  String
-  firstName String
-  lastName  String
-  phone     String
-  image     String
-  role      Role   @default(driver)
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  email       String @unique
+  password    String
+  firstName   String
+  lastName    String
+  phone       String
+  image       String
+  role        Role   @default(driver)
+  OwnedJobs   Job[]  @relation("OwnedJobs")
+  CreatedJobs Job[]  @relation("CreatedJobs")
+}
+
+model Job {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  owner         User     @relation("OwnedJobs", fields: [ownerId], references: [id])
+  ownerId       String   @db.ObjectId
+  createdBy     User     @relation("CreatedJobs", fields: [creatorId], references: [id])
+  creatorId     String   @db.ObjectId
+  typeOfRubbish String[]
+  street        String
+  suburb        String
+  city          String
+  postCode      String
+  date          DateTime
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }
 
 enum Role {
