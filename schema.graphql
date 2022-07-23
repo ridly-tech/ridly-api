@@ -51,13 +51,11 @@ enum Role {
 }
 
 type User {
-  createdJobs: [Job]
   email: String
   firstName: String
   id: String
   image: String
   lastName: String
-  ownedJobs: [Job]
   password: String
   phone: String
   role: Role

@@ -17,8 +17,6 @@ export const User = objectType({
     t.string('image')
     t.string('password')
     t.field('role', { type: Role })
-    t.list.field('createdJobs', { type: Job })
-    t.list.field('ownedJobs', { type: Job })
   },
 })
 
