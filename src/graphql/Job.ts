@@ -1,33 +1,26 @@
-import { objectType, asNexusMethod, inputObjectType } from "nexus";
-import { GraphQLDateTime } from "graphql-scalars";
-
-export const DateTime = asNexusMethod(GraphQLDateTime, 'date')
+import { objectType, inputObjectType } from 'nexus'
 
 export const Job = objectType({
-    name: 'Job',
-    definition(t) {
-        t.string('id')
-        t.string('ownerId')
-        t.string('creatorId')
-        t.list.string('typeOfRubbish')
-        t.string('street')
-        t.string('suburb')
-        t.string('city')
-        t.string('postcode')
-        t.date('date')
-        t.date('createdAt')
-        t.date('updatedAt')
-    },
+  name: 'Job',
+  definition(t) {
+    t.string('id')
+    t.string('ownerId')
+    t.string('creatorId')
+    t.string('street')
+    t.string('suburb')
+    t.string('city')
+    t.string('postcode')
+  },
 })
 
 export const JobCreateInput = inputObjectType({
-    name: 'JobCreateInput',
-    definition(t) {
-        t.nonNull.list.nonNull.string('typeOfRubbish')
-        t.nonNull.string('street')
-        t.nonNull.string('suburb')
-        t.nonNull.string('city')
-        t.nonNull.string('postcode')
-        t.nonNull.date('date')
-    },
+  name: 'JobCreateInput',
+  definition(t) {
+    t.nonNull.string('ownerId')
+    t.nonNull.string('creatorId')
+    t.nonNull.string('street')
+    t.nonNull.string('suburb')
+    t.nonNull.string('city')
+    t.nonNull.string('postcode')
+  },
 })

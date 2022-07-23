@@ -27,10 +27,10 @@ const rules = {
 
 export const permissions = shield({
   Query: {
-    me: rules.isAuthenticatedUser,
+    // me: rules.isAuthenticatedUser,
   },
   Mutation: {
-    updateUser: or(rules.isCurrentUserEmail, rules.isAdmin),
-    deleteUser: or(rules.isAdmin, rules.isAuthenticatedUser)
+    // updateUser: or(rules.isCurrentUserEmail, rules.isAdmin),
+    // deleteUser: or(rules.isAdmin, rules.isAuthenticatedUser)
   },
 }, {allowExternalErrors: true} )

@@ -16,24 +16,20 @@ model User {
   phone       String
   image       String
   role        Role   @default(driver)
-  OwnedJobs   Job[]  @relation("OwnedJobs")
-  CreatedJobs Job[]  @relation("CreatedJobs")
+  ownedJobs   Job[]  @relation("ownedJobs")
+  createdJobs Job[]  @relation("createdJobs")
 }
 
 model Job {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  owner         User     @relation("OwnedJobs", fields: [ownerId], references: [id])
-  ownerId       String   @db.ObjectId
-  createdBy     User     @relation("CreatedJobs", fields: [creatorId], references: [id])
-  creatorId     String   @db.ObjectId
-  typeOfRubbish String[]
-  street        String
-  suburb        String
-  city          String
-  postCode      String
-  date          DateTime
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  owner     User   @relation("ownedJobs", fields: [ownerId], references: [id])
+  ownerId   String @db.ObjectId
+  creator   User   @relation("createdJobs", fields: [creatorId], references: [id])
+  creatorId String @db.ObjectId
+  street    String
+  suburb    String
+  city      String
+  postcode  String
 }
 
 enum Role {

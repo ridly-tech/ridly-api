@@ -1,8 +1,9 @@
 import { objectType, inputObjectType, enumType } from 'nexus'
+import { Job } from './Job'
 
 export const Role = enumType({
   name: 'Role',
-  members: ['admin', 'office', 'driver']
+  members: ['admin', 'office', 'driver'],
 })
 
 export const User = objectType({
@@ -16,6 +17,8 @@ export const User = objectType({
     t.string('image')
     t.string('password')
     t.field('role', { type: Role })
+    t.list.field('createdJobs', { type: Job })
+    t.list.field('ownedJobs', { type: Job })
   },
 })
 

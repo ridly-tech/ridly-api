@@ -32,3 +32,35 @@ export async function getUserDetails(context: Context) {
     return user
   }
 }
+
+export async function getUserEmail(context: Context) {
+  const userId = getUserId(context)
+  if (userId === undefined) {
+    throw new Error('User ID is Undefined')
+  }
+  const user = await context.prisma.user.findUnique({
+    where: {
+      id: userId
+    },
+  })
+  if (user) {
+    if (user.email !== null) {
+      return user.email
+    }
+  } else {
+    throw new Error('User does not have an email address')
+  }
+}
+
+export async function getUserIdFromEmail(email: string, context: Context) {
+  const user = await context.prisma.user.findUnique({
+    where: {
+      email: email
+    }
+  })
+  if (user) {
+    return user.id
+  } else {
+    throw new Error('User with that email does not exist.')
+  }
+}
