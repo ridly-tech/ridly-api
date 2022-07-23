@@ -7,15 +7,17 @@ const rules = {
     const userId = getUserId(context)
     return Boolean(userId)
   }),
-  isCurrentUserEmail: rule()( async (_parent, {email}, context: Context) => {
+  isCurrentUserEmail: rule()(async (_parent, { email }, context: Context) => {
     const user = await getUserDetails(context)
     if (user?.email === email) {
       return true
     } else {
-      return new Error('You do not have authorization to execute this query or mutation.')
+      return new Error(
+        'You do not have authorization to execute this query or mutation.',
+      )
     }
   }),
-  isAdmin: rule()( async (_parent, _args, context: Context) => {
+  isAdmin: rule()(async (_parent, _args, context: Context) => {
     const user = await getUserDetails(context)
     if (user?.role === 'admin') {
       return true
@@ -25,12 +27,15 @@ const rules = {
   }),
 }
 
-export const permissions = shield({
-  Query: {
-    me: rules.isAuthenticatedUser,
+export const permissions = shield(
+  {
+    Query: {
+      me: rules.isAuthenticatedUser,
+    },
+    Mutation: {
+      updateUser: or(rules.isCurrentUserEmail, rules.isAdmin),
+      deleteUser: or(rules.isAdmin, rules.isAuthenticatedUser),
+    },
   },
-  Mutation: {
-    updateUser: or(rules.isCurrentUserEmail, rules.isAdmin),
-    deleteUser: or(rules.isAdmin, rules.isAuthenticatedUser)
-  },
-}, {allowExternalErrors: true} )
+  { allowExternalErrors: true },
+)

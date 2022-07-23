@@ -75,19 +75,23 @@ export const updateJob = mutationField('updateJob', {
     city: nonNull(stringArg()),
     postcode: nonNull(stringArg()),
   },
-  resolve: async (_parent, { id, street, suburb, city, postcode }, context: Context) => {
+  resolve: async (
+    _parent,
+    { id, street, suburb, city, postcode },
+    context: Context,
+  ) => {
     findJobByIdOrThrow(id, context)
     await context.prisma.job.update({
       where: {
-        id
+        id,
       },
       data: {
         street: street,
         suburb: suburb,
         city: city,
-        postcode: postcode
-      }
+        postcode: postcode,
+      },
     })
     return await findJobByIdAndReturnJob(id, context)
-  }
+  },
 })

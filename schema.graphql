@@ -20,6 +20,8 @@ type Job {
   postcode: String
   street: String
   suburb: String
+  timeWindow: TimeWindow
+  typeOfRubbish: [TypeOfRubbish]
   updatedAt: DateTime
 }
 
@@ -58,6 +60,29 @@ enum Role {
   admin
   driver
   office
+}
+
+enum TimeWindow {
+  eight_am
+  eleven_am
+  five_pm
+  four_pm
+  nine_am
+  one_pm
+  seven_am
+  six_am
+  ten_am
+  three_pm
+  twelve_pm
+  two_pm
+}
+
+enum TypeOfRubbish {
+  fridge
+  mattress
+  misc
+  sofa
+  washing_machine
 }
 
 type User {

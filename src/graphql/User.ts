@@ -1,5 +1,6 @@
 import { objectType, inputObjectType, enumType, list } from 'nexus'
 import { Context } from '../context'
+
 export const Role = enumType({
   name: 'Role',
   members: ['admin', 'office', 'driver'],

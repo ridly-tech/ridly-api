@@ -1,7 +1,7 @@
 import { verify } from 'jsonwebtoken'
 import { Context } from './context'
 
-const nodeSecret: string = (process.env.APP_SECRET as string)
+const nodeSecret: string = process.env.APP_SECRET as string
 
 export const APP_SECRET = nodeSecret
 
@@ -25,7 +25,7 @@ export async function getUserDetails(context: Context) {
   }
   const user = await context.prisma.user.findUnique({
     where: {
-      id: userId
+      id: userId,
     },
   })
   if (user) {
@@ -40,7 +40,7 @@ export async function getUserEmail(context: Context) {
   }
   const user = await context.prisma.user.findUnique({
     where: {
-      id: userId
+      id: userId,
     },
   })
   if (user) {
@@ -55,8 +55,8 @@ export async function getUserEmail(context: Context) {
 export async function getUserIdFromEmail(email: string, context: Context) {
   const user = await context.prisma.user.findUnique({
     where: {
-      email: email
-    }
+      email: email,
+    },
   })
   if (user) {
     return user.id

@@ -1,4 +1,4 @@
-import {makeSchema} from 'nexus';
+import { makeSchema } from 'nexus'
 import { permissions } from './permissions'
 import { applyMiddleware } from 'graphql-middleware'
 import * as types from './graphql'

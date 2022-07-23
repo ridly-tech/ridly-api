@@ -1,4 +1,4 @@
-import { objectType, inputObjectType, asNexusMethod } from 'nexus'
+import { objectType, inputObjectType, asNexusMethod, enumType } from 'nexus'
 import { DateTimeResolver } from 'graphql-scalars'
 
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
@@ -14,6 +14,8 @@ export const Job = objectType({
     t.string('postcode')
     t.date('createdAt')
     t.date('updatedAt')
+    t.field('timeWindow', { type: 'TimeWindow' })
+    t.list.field('typeOfRubbish', { type: 'TypeOfRubbish' })
   },
 })
 
@@ -34,4 +36,27 @@ export const JobAdminMessage = objectType({
     t.boolean('success')
     t.string('message')
   },
+})
+
+export const TimeWindow = enumType({
+  name: 'TimeWindow',
+  members: [
+    'six_am',
+    'seven_am',
+    'eight_am',
+    'nine_am',
+    'ten_am',
+    'eleven_am',
+    'twelve_pm',
+    'one_pm',
+    'two_pm',
+    'three_pm',
+    'four_pm',
+    'five_pm',
+  ],
+})
+
+export const TypeOfRubbish = enumType({
+  name: 'TypeOfRubbish',
+  members: ['sofa', 'mattress', 'fridge', 'washing_machine', 'misc'],
 })
