@@ -38,7 +38,6 @@ export const createJob = mutationField('createJob', {
     return context.prisma.job.create({
       data: {
         ownerId: userId,
-        creatorId: userId,
         street,
         suburb,
         city,

@@ -1,6 +1,5 @@
-import { objectType, inputObjectType, enumType } from 'nexus'
-import { Job } from './Job'
-
+import { objectType, inputObjectType, enumType, list } from 'nexus'
+import { Context } from '../context'
 export const Role = enumType({
   name: 'Role',
   members: ['admin', 'office', 'driver'],
@@ -17,6 +16,19 @@ export const User = objectType({
     t.string('image')
     t.string('password')
     t.field('role', { type: Role })
+    t.list.field('ownedJobs', {
+      type: 'Job',
+      resolve: async (parent, _args, context: Context) => {
+        if (!parent.id) {
+          throw new Error('No user')
+        }
+        return context.prisma.job.findMany({
+          where: {
+            ownerId: parent.id,
+          },
+        })
+      },
+    })
   },
 })
 

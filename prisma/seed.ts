@@ -19,7 +19,6 @@ const userData: Prisma.UserCreateInput[] = [
 const createJobData = (userId: string) => {
   return ({
     ownerId: userId,
-    creatorId: userId,
     street: '6/2a Dumaresq Road',
     suburb: 'Rose Bay',
     city: 'Sydney',
