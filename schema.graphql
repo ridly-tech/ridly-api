@@ -13,6 +13,7 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 type Job {
+  bookingDateTime: DateTime
   city: String
   createdAt: DateTime
   id: String
@@ -31,15 +32,18 @@ type JobAdminMessage {
 }
 
 input JobCreateInput {
+  bookingDateTime: DateTime!
   city: String!
   ownerId: String!
   postcode: String!
   street: String!
   suburb: String!
+  timeWindow: TimeWindow!
+  typeOfRubbish: [TypeOfRubbish!]!
 }
 
 type Mutation {
-  createJob(city: String!, postcode: String!, street: String!, suburb: String!): Job
+  createJob(bookingDateTime: DateTime!, city: String!, postcode: String!, street: String!, suburb: String!, timeWindow: TimeWindow!, typeOfRubbish: [TypeOfRubbish!]!): Job
   deleteJob(id: String!): JobAdminMessage
   deleteUser(email: String!): UserAdminMessage
   login(email: String!, password: String!): AuthPayload
@@ -68,6 +72,7 @@ enum TimeWindow {
   five_pm
   four_pm
   nine_am
+  none
   one_pm
   seven_am
   six_am

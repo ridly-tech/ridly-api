@@ -1,6 +1,7 @@
-import { mutationField, nonNull, stringArg } from 'nexus'
+import { mutationField, nonNull, stringArg, list, arg } from 'nexus'
 import { Context } from '../context'
 import { getUserId } from '../utils'
+import { TimeWindow } from './Job'
 
 const findJobByIdOrThrow = async (jobId: string, context: Context) => {
   return await context.prisma.job.findUniqueOrThrow({
@@ -25,10 +26,13 @@ export const createJob = mutationField('createJob', {
     suburb: nonNull(stringArg()),
     city: nonNull(stringArg()),
     postcode: nonNull(stringArg()),
+    bookingDateTime: nonNull(arg({type: 'DateTime'})),
+    timeWindow: nonNull(arg({ type: 'TimeWindow' })),
+    typeOfRubbish: nonNull(list(nonNull(arg({ type: 'TypeOfRubbish' })))),
   },
   resolve: async (
     _parent,
-    { street, suburb, city, postcode },
+    { street, suburb, city, postcode, timeWindow, typeOfRubbish, bookingDateTime },
     context: Context,
   ) => {
     const userId = getUserId(context)
@@ -42,6 +46,9 @@ export const createJob = mutationField('createJob', {
         suburb,
         city,
         postcode,
+        timeWindow,
+        typeOfRubbish,
+        bookingDateTime
       },
     })
   },

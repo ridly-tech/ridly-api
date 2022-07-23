@@ -12,10 +12,11 @@ export const Job = objectType({
     t.string('suburb')
     t.string('city')
     t.string('postcode')
-    t.date('createdAt')
-    t.date('updatedAt')
+    t.date('bookingDateTime')
     t.field('timeWindow', { type: 'TimeWindow' })
     t.list.field('typeOfRubbish', { type: 'TypeOfRubbish' })
+    t.date('createdAt')
+    t.date('updatedAt')
   },
 })
 
@@ -27,6 +28,9 @@ export const JobCreateInput = inputObjectType({
     t.nonNull.string('suburb')
     t.nonNull.string('city')
     t.nonNull.string('postcode')
+    t.nonNull.date('bookingDateTime')
+    t.nonNull.field('timeWindow', { type: 'TimeWindow' })
+    t.nonNull.list.nonNull.field('typeOfRubbish', { type: 'TypeOfRubbish' })
   },
 })
 
@@ -41,6 +45,7 @@ export const JobAdminMessage = objectType({
 export const TimeWindow = enumType({
   name: 'TimeWindow',
   members: [
+    'none',
     'six_am',
     'seven_am',
     'eight_am',

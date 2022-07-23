@@ -20,19 +20,46 @@ model User {
 }
 
 model Job {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   String   @db.ObjectId
-  street    String
-  suburb    String
-  city      String
-  postcode  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String          @id @default(auto()) @map("_id") @db.ObjectId
+  owner           User            @relation(fields: [ownerId], references: [id])
+  ownerId         String          @db.ObjectId
+  street          String
+  suburb          String
+  city            String
+  postcode        String
+  timeWindow      TimeWindow
+  typeOfRubbish   TypeOfRubbish[]
+  bookingDateTime DateTime
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+enum TypeOfRubbish {
+  sofa
+  mattress
+  fridge
+  washing_machine
+  misc
 }
 
 enum Role {
   admin
   office
   driver
+}
+
+enum TimeWindow {
+  none
+  six_am
+  seven_am
+  eight_am
+  nine_am
+  ten_am
+  eleven_am
+  twelve_pm
+  one_pm
+  two_pm
+  three_pm
+  four_pm
+  five_pm
 }
