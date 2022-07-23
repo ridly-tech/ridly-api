@@ -1,1 +1,6 @@
-export * from './User';
+export * from './Job'
+export * from './JobMutation'
+export * from './JobQuery'
+export * from './User'
+export * from './UserMutation'
+export * from './UserQuery'
