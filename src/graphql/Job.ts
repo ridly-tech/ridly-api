@@ -24,3 +24,11 @@ export const JobCreateInput = inputObjectType({
     t.nonNull.string('postcode')
   },
 })
+
+export const JobAdminMessage = objectType({
+  name: 'JobAdminMessage',
+  definition(t) {
+    t.boolean('success')
+    t.string('message')
+  },
+})

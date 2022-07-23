@@ -17,6 +17,11 @@ type Job {
   suburb: String
 }
 
+type JobAdminMessage {
+  message: String
+  success: Boolean
+}
+
 input JobCreateInput {
   city: String!
   creatorId: String!
@@ -28,9 +33,11 @@ input JobCreateInput {
 
 type Mutation {
   createJob(city: String!, postcode: String!, street: String!, suburb: String!): Job
+  deleteJob(id: String!): JobAdminMessage
   deleteUser(email: String!): UserAdminMessage
   login(email: String!, password: String!): AuthPayload
   signup(email: String!, firstName: String!, image: String!, lastName: String!, password: String!, phone: String!, role: String!): AuthPayload
+  updateJob(city: String!, id: String!, postcode: String!, street: String!, suburb: String!): Job
   updateUser(email: String!, firstName: String!, image: String!, lastName: String!, password: String!, phone: String!): User
 }
 
