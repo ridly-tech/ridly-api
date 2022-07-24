@@ -8,6 +8,9 @@ export const Job = objectType({
   definition(t) {
     t.string('id')
     t.string('ownerId')
+    t.field('jobStatus', { type: 'JobStatus' })
+    t.int('quote')
+    t.int('revenue')
     t.string('street')
     t.string('suburb')
     t.string('city')
@@ -15,6 +18,8 @@ export const Job = objectType({
     t.date('bookingDateTime')
     t.field('timeWindow', { type: 'TimeWindow' })
     t.list.field('typeOfRubbish', { type: 'TypeOfRubbish' })
+    t.boolean('firstConfirm')
+    t.boolean('secondConfirm')
     t.date('createdAt')
     t.date('updatedAt')
   },
@@ -24,6 +29,7 @@ export const JobCreateInput = inputObjectType({
   name: 'JobCreateInput',
   definition(t) {
     t.nonNull.string('ownerId')
+    t.nonNull.field('jobStatus', { type: 'JobStatus' })
     t.nonNull.string('street')
     t.nonNull.string('suburb')
     t.nonNull.string('city')
@@ -64,4 +70,9 @@ export const TimeWindow = enumType({
 export const TypeOfRubbish = enumType({
   name: 'TypeOfRubbish',
   members: ['sofa', 'mattress', 'fridge', 'washing_machine', 'misc'],
+})
+
+export const JobStatus = enumType({
+  name: 'JobStatus',
+  members: ['created', 'quoted', 'paid', 'cancelled'],
 })

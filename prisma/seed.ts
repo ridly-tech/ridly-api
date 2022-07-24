@@ -4,6 +4,7 @@ import {
   TimeWindow,
   TypeOfRubbish,
   Role,
+  JobStatus,
 } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -51,6 +52,11 @@ const jobData = [
       'sofa' as TypeOfRubbish,
     ],
     bookingDateTime: '2007-12-03T10:15:30Z',
+    firstConfirm: true,
+    secondConfirm: false,
+    quote: 1200,
+    jobStatus: 'paid' as JobStatus,
+    revenue: 1000,
   },
   {
     street: '27 Beach Road',
@@ -60,6 +66,11 @@ const jobData = [
     timeWindow: 'none' as TimeWindow,
     typeOfRubbish: ['misc' as TypeOfRubbish],
     bookingDateTime: '2007-11-03T12:15:30Z',
+    firstConfirm: false,
+    secondConfirm: false,
+    quote: undefined,
+    jobStatus: 'created' as JobStatus,
+    revenue: undefined,
   },
 ]
 

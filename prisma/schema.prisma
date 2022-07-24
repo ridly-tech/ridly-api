@@ -23,6 +23,9 @@ model Job {
   id              String          @id @default(auto()) @map("_id") @db.ObjectId
   owner           User            @relation(fields: [ownerId], references: [id])
   ownerId         String          @db.ObjectId
+  jobStatus       JobStatus
+  quote           Int?
+  revenue         Int?
   street          String
   suburb          String
   city            String
@@ -30,8 +33,27 @@ model Job {
   timeWindow      TimeWindow
   typeOfRubbish   TypeOfRubbish[]
   bookingDateTime DateTime
+  firstConfirm    Boolean
+  secondConfirm   Boolean
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
+  Customer        Customer?       @relation(fields: [customerId], references: [id])
+  customerId      String?         @db.ObjectId
+}
+
+model Customer {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  street         String
+  suburb         String
+  city           String
+  postcode       String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  jobs           Job[]
+  numberOfJobs   Int
+  totalRevenue   Int
+  mobilePhone    String
+  alternatePhone String
 }
 
 enum TypeOfRubbish {
@@ -62,4 +84,11 @@ enum TimeWindow {
   three_pm
   four_pm
   five_pm
+}
+
+enum JobStatus {
+  created
+  quoted
+  paid
+  cancelled
 }

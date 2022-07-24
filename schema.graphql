@@ -16,9 +16,14 @@ type Job {
   bookingDateTime: DateTime
   city: String
   createdAt: DateTime
+  firstConfirm: Boolean
   id: String
+  jobStatus: JobStatus
   ownerId: String
   postcode: String
+  quote: Int
+  revenue: Int
+  secondConfirm: Boolean
   street: String
   suburb: String
   timeWindow: TimeWindow
@@ -34,6 +39,7 @@ type JobAdminMessage {
 input JobCreateInput {
   bookingDateTime: DateTime!
   city: String!
+  jobStatus: JobStatus!
   ownerId: String!
   postcode: String!
   street: String!
@@ -42,13 +48,22 @@ input JobCreateInput {
   typeOfRubbish: [TypeOfRubbish!]!
 }
 
+enum JobStatus {
+  cancelled
+  created
+  paid
+  quoted
+}
+
 type Mutation {
-  createJob(bookingDateTime: DateTime!, city: String!, postcode: String!, street: String!, suburb: String!, timeWindow: TimeWindow!, typeOfRubbish: [TypeOfRubbish!]!): Job
+  createJob(bookingDateTime: DateTime!, city: String!, postcode: String!, quote: Int!, street: String!, suburb: String!, timeWindow: TimeWindow!, typeOfRubbish: [TypeOfRubbish!]!): Job
   deleteJob(id: String!): JobAdminMessage
   deleteUser(email: String!): UserAdminMessage
+  firstConfirmation(id: String!): JobAdminMessage
   login(email: String!, password: String!): AuthPayload
+  secondConfirmation(id: String!): JobAdminMessage
   signup(email: String!, firstName: String!, image: String!, lastName: String!, password: String!, phone: String!, role: String!): AuthPayload
-  updateJob(city: String!, id: String!, postcode: String!, street: String!, suburb: String!): Job
+  updateJob(city: String!, firstConfirm: Boolean!, id: String!, jobStatus: JobStatus!, postcode: String!, quote: Int, revenue: Int, secondConfirm: Boolean!, street: String!, suburb: String!): Job
   updateUser(email: String!, firstName: String!, image: String!, lastName: String!, password: String!, phone: String!): User
 }
 
