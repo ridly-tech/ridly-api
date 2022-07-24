@@ -1,13 +1,36 @@
 import { objectType, inputObjectType, asNexusMethod, enumType } from 'nexus'
 import { DateTimeResolver } from 'graphql-scalars'
+import { Context } from '../context'
 
 export const DateTime = asNexusMethod(DateTimeResolver, 'date')
+
+const findUserOrThrow = async (userId: string, context: Context) => {
+  return await context.prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+  })
+}
 
 export const Job = objectType({
   name: 'Job',
   definition(t) {
     t.string('id')
     t.string('ownerId')
+    t.field('owner', {
+      type: 'User',
+      resolve: async (parent, _args, context: Context) => {
+        if (!parent.ownerId) {
+          throw new Error('No user associated with this job')
+        }
+        return context.prisma.user.findUniqueOrThrow({
+          where: {
+            id: parent.ownerId
+          }
+        })
+      },
+    })
+    t.string('customerId')
     t.field('jobStatus', { type: 'JobStatus' })
     t.int('quote')
     t.int('revenue')

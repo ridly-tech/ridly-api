@@ -1,3 +1,4 @@
+export * from './Customer'
 export * from './Job'
 export * from './JobMutation'
 export * from './JobQuery'

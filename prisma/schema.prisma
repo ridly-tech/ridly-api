@@ -24,8 +24,8 @@ model Job {
   owner           User            @relation(fields: [ownerId], references: [id])
   ownerId         String          @db.ObjectId
   jobStatus       JobStatus
-  quote           Int?
-  revenue         Int?
+  quote           Float?
+  revenue         Float?
   street          String
   suburb          String
   city            String
@@ -37,7 +37,7 @@ model Job {
   secondConfirm   Boolean
   createdAt       DateTime        @default(now())
   updatedAt       DateTime        @updatedAt
-  Customer        Customer?       @relation(fields: [customerId], references: [id])
+  customer        Customer?       @relation(fields: [customerId], references: [id])
   customerId      String?         @db.ObjectId
 }
 
@@ -51,7 +51,7 @@ model Customer {
   updatedAt      DateTime @updatedAt
   jobs           Job[]
   numberOfJobs   Int
-  totalRevenue   Int
+  totalRevenue   Float
   mobilePhone    String
   alternatePhone String
 }
